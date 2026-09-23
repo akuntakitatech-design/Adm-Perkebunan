@@ -25,13 +25,26 @@ const adminPassword = process.env.ADMIN_PASSWORD || '';
 const adminName = process.env.ADMIN_NAME || 'Owner';
 const configuredUserId = (process.env.ADMIN_USER_ID || '').trim();
 const cookieName = 'kebun_session';
-const cookieSecure = String(process.env.COOKIE_SECURE || '').toLowerCase() === 'true';
+// COOKIE_SECURE: 'true' | 'false' | 'auto' (default). 'auto' = ikut protokol request
+// (X-Forwarded-Proto dari Nginx/Traefik): HTTPS -> Secure, HTTP -> tanpa Secure.
+// Mencegah kasus cookie ditolak browser saat situs dibuka lewat http:// padahal Secure=true.
+const cookieSecureSetting = String(process.env.COOKIE_SECURE || 'auto').trim().toLowerCase();
+function isSecureRequest(req: express.Request) {
+  if (cookieSecureSetting === 'true') return true;
+  if (cookieSecureSetting === 'false') return false;
+  const forwarded = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim().toLowerCase();
+  return forwarded ? forwarded === 'https' : req.secure;
+}
 const corsOrigins = (process.env.CORS_ORIGIN || '')
   .split(',')
   .map(item => item.trim().replace(/\/+$/, ''))
   .filter(Boolean);
 // Jika frontend & backend berbeda domain (CORS aktif), cookie harus SameSite=None + Secure.
-const cookieSameSite: 'lax' | 'none' = corsOrigins.length > 0 && cookieSecure ? 'none' : 'lax';
+function cookieOptions(req: express.Request) {
+  const secure = isSecureRequest(req);
+  const sameSite: 'lax' | 'none' = corsOrigins.length > 0 && secure ? 'none' : 'lax';
+  return { httpOnly: true, sameSite, secure, path: '/' as const };
+}
 
 if (!jwtSecret || jwtSecret.length < 32) throw new Error('JWT_SECRET wajib diisi minimal 32 karakter.');
 if (!adminEmail || !adminPassword) throw new Error('ADMIN_EMAIL dan ADMIN_PASSWORD wajib diisi.');
@@ -88,7 +101,7 @@ app.post('/api/auth/login', (req, res) => {
     return;
   }
   const user: LocalUser = { userId: userIdForEmail(email), email, name: adminName };
-  res.cookie(cookieName, issueToken(user), { httpOnly: true, sameSite: cookieSameSite, secure: cookieSecure, maxAge: 12 * 60 * 60 * 1000, path: '/' });
+  res.cookie(cookieName, issueToken(user), { ...cookieOptions(req), maxAge: 12 * 60 * 60 * 1000 });
   res.json({ user });
 });
 app.get('/api/auth/me', (req, res) => {
@@ -96,13 +109,21 @@ app.get('/api/auth/me', (req, res) => {
   if (!user) { res.status(401).json({ error: 'Belum login.' }); return; }
   res.json({ user });
 });
-app.post('/api/auth/logout', (_req, res) => {
-  res.clearCookie(cookieName, { httpOnly: true, sameSite: cookieSameSite, secure: cookieSecure, path: '/' });
+app.post('/api/auth/logout', (req, res) => {
+  res.clearCookie(cookieName, cookieOptions(req));
   res.json({ signedOut: true });
 });
 
-app.get('/api/_system', (_req, res) => {
-  res.json({ ok: true, storage: storageMode, version: process.env.APP_VERSION || '70.0.0', uptimeSec: Math.round(process.uptime()) });
+app.get('/api/_system', (req, res) => {
+  res.json({
+    ok: true,
+    storage: storageMode,
+    version: process.env.APP_VERSION || '70.2.0',
+    uptimeSec: Math.round(process.uptime()),
+    cookieSecure: isSecureRequest(req),
+    cookieSecureSetting,
+    requestProto: String(req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http')),
+  });
 });
 
 app.use(handler);

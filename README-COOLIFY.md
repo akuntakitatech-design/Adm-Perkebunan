@@ -33,7 +33,7 @@ JWT_SECRET=<acak minimal 32 karakter>
 ADMIN_EMAIL=admin@kebun.test
 ADMIN_PASSWORD=<password login>
 ADMIN_NAME=Owner Administrasi Perkebunan
-COOKIE_SECURE=true
+COOKIE_SECURE=auto        # auto = ikut protokol (https -> Secure); boleh dihapus
 CORS_ORIGIN=              # kosongkan jika memakai proxy Nginx (satu domain)
 R2_ACCOUNT_ID=91392e9c0d2590c87f719589c08abab2
 R2_ENDPOINT=https://91392e9c0d2590c87f719589c08abab2.r2.cloudflarestorage.com
@@ -83,8 +83,8 @@ Jika backend punya domain sendiri (`https://api-kebun.domain.com`), set di backe
 
 ```
 CORS_ORIGIN=https://kebun.domain-anda.com
-COOKIE_SECURE=true
 ```
+(`COOKIE_SECURE` biarkan `auto`; lewat HTTPS cookie otomatis `Secure`.)
 
 Cookie login otomatis memakai `SameSite=None; Secure`. Frontend tetap memanggil path relatif
 `/api/...`, jadi Nginx tetap perlu `BACKEND_URL` mengarah ke domain backend (`https://api-kebun.domain.com`).
@@ -107,7 +107,15 @@ API_BASE=https://kebun.domain-anda.com ADMIN_EMAIL=... ADMIN_PASSWORD=... node s
 Script ini login lalu mengisi kebun, kas/bank, PKS, armada, pekerja, tarif, pekerjaan kebun,
 dan transaksi contoh melalui API (aman dijalankan pada database kosong).
 
-## 6. Backup
+## 6. Troubleshooting login
+
+| Gejala | Penyebab | Solusi |
+|---|---|---|
+| Setelah login muncul **"Sesi login tidak tersedia."** | Cookie sesi tidak tersimpan browser: `COOKIE_SECURE=true` tetapi situs dibuka lewat `http://` | Gunakan HTTPS (domain `https://...` di Coolify) atau set `COOKIE_SECURE=auto`/`false` lalu redeploy backend |
+| `/api/...` membalas 502 JSON "Server aplikasi belum dapat dihubungi" | Nginx tidak bisa resolve `BACKEND_URL` | Isi *Network aliases* backend (`backend-perkebunan`) & redeploy backend; cek `BACKEND_URL=http://backend-perkebunan:3000` |
+| Cek cepat | – | `GET https://<domain>/api/_system` menampilkan `cookieSecure`, `requestProto`, `storage` |
+
+## 7. Backup
 
 - Database: fitur backup MariaDB bawaan Coolify (schedule ke S3/R2).
 - File bukti: sudah di R2. Saat perusahaan dihapus dari aplikasi, backup JSON otomatis
