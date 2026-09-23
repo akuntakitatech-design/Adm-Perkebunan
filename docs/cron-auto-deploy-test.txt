@@ -1,0 +1,2 @@
+Cron auto-deploy verification marker.
+Created from ChatGPT to confirm VPS polling deploy path.
