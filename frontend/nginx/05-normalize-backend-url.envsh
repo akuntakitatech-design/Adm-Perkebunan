@@ -10,6 +10,9 @@ set -e
 BACKEND_URL_RAW="${BACKEND_URL:-}"
 BACKEND_URL_RAW="$(printf '%s' "$BACKEND_URL_RAW" | tr -d '[:space:]')"
 
+# Toleransi salah isi di UI Coolify: value berisi 'BACKEND_URL=http://...' atau dibungkus tanda kutip
+BACKEND_URL_RAW="$(printf '%s' "$BACKEND_URL_RAW" | sed -e 's/^BACKEND_URL=//' -e 's/^["'"'"']//' -e 's/["'"'"']$//')"
+
 if [ -z "$BACKEND_URL_RAW" ]; then
   BACKEND_URL_RAW="http://backend:3000"
   echo "[nginx] BACKEND_URL kosong, memakai default $BACKEND_URL_RAW" >&2
