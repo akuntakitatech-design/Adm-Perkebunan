@@ -1,0 +1,11 @@
+node_modules
+uploads
+__pycache__
+*.pyc
+.env
+.env.*
+!.env.example
+server.py
+requirements.txt
+pytest.ini
+tests
