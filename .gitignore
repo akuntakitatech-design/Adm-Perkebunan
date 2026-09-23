@@ -1,12 +1,24 @@
+# Dependencies & build
 node_modules/
-dist/
+frontend/dist/
+backend/dist/
 
+# Environment (jangan commit rahasia)
 .env
 .env.*
 !.env.example
 
+# Data lokal
+backend/uploads/
 data/
 backups/
 
+# Python (gateway preview Emergent)
+__pycache__/
+*.pyc
+
+# Lainnya
 *.log
 .DS_Store
+.idea/
+.vscode/
