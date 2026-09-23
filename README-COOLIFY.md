@@ -13,7 +13,7 @@ Storage bukti transaksi: **Cloudflare R2** (bucket S3-compatible).
 
 ---
 
-## 1. Resource `Backend-Payroll` (Application)
+## 1. Resource `Backend-Perkebunan` (Application)
 
 | Pengaturan | Nilai |
 |---|---|
@@ -50,7 +50,7 @@ R2_PUBLIC_URL=            # kosongkan -> presigned URL (privat)
 
 Backend tidak perlu domain publik jika frontend mem-proxy `/api`.
 
-## 2. Resource `Frontend-Payroll` (Application)
+## 2. Resource `Frontend-Perkebunan` (Application)
 
 | Pengaturan | Nilai |
 |---|---|
