@@ -16,9 +16,11 @@ ENV BACKEND_URL=http://backend:3000 \
     CLIENT_MAX_BODY_SIZE=10m
 RUN rm -f /etc/nginx/conf.d/default.conf
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
-# Normalisasi BACKEND_URL (tambah http://, hapus trailing slash) sebelum envsubst
+# Normalisasi BACKEND_URL (tambah http://, hapus trailing slash) sebelum envsubst,
+# dan fallback resolver DNS Docker
 COPY nginx/05-normalize-backend-url.envsh /docker-entrypoint.d/05-normalize-backend-url.envsh
-RUN chmod +x /docker-entrypoint.d/05-normalize-backend-url.envsh
+COPY nginx/16-resolver-fallback.envsh /docker-entrypoint.d/16-resolver-fallback.envsh
+RUN chmod +x /docker-entrypoint.d/05-normalize-backend-url.envsh /docker-entrypoint.d/16-resolver-fallback.envsh
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=5 \

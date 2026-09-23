@@ -66,10 +66,16 @@ Environment variables:
 BACKEND_URL=http://<nama-container-backend>:3000
 ```
 
-Cara mendapatkan `<nama-container-backend>`: buka resource Backend-Payroll → tab
-**Advanced/Network** → salin *container name* (atau isi *Network Alias*, misal `backend-payroll`,
-lalu gunakan `http://backend-payroll:3000`). Kedua aplikasi harus **Connect to Predefined Network**
-atau berada di project/environment yang sama supaya saling terlihat.
+**Cara menentukan host backend (`BACKEND_URL`):**
+
+1. **Disarankan — Network Alias.** Buka resource Backend-Perkebunan → **Networking** → kolom **Network aliases** → isi `backend-perkebunan` → Save → **Redeploy backend**. Lalu di frontend: `BACKEND_URL=http://backend-perkebunan:3000`. Alias ini stabil walau backend di-redeploy.
+2. **Alternatif — Internal hostname.** Di Backend-Perkebunan → *Application details → Internal access* tampil *Internal hostname* berbentuk `<uuid>-<timestamp>` (contoh `hsagxgqxov41zguu6thieqba-073109609681`). Bisa dipakai, **tetapi berubah setiap redeploy** sehingga env frontend harus diperbarui lagi.
+
+> UUID saja (tanpa timestamp) **bukan** nama yang dikenal DNS Docker di Coolify bila *Network aliases* masih "None".
+
+Syarat: kedua resource berada di **project/environment yang sama** (network Docker `coolify` yang sama). **Port mappings** di frontend dikosongkan (cukup *Ports exposes* `80`); backend juga tidak perlu port mapping ke host.
+
+Sejak v70.2, Nginx me-resolve host backend saat request (bukan saat start). Jika backend belum siap/nama salah, frontend tetap hidup dan `/api` membalas **502 JSON** "Server aplikasi belum dapat dihubungi..." lalu pulih otomatis ketika backend tersedia — periksa *Runtime Logs* frontend, baris `[nginx] proxy /api -> ...`.
 
 ## 3. Mode alternatif: domain terpisah (tanpa proxy)
 
