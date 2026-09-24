@@ -1,9 +1,0 @@
-kebun.akuntakita.com {
-    encode zstd gzip
-    reverse_proxy kebun-app:3000
-}
-
-fnb.akuntakita.com {
-    encode zstd gzip
-    reverse_proxy fnb-staging-app:3000
-}
