@@ -100,11 +100,9 @@ Adm-Perkebunan/
 │   ├── Dockerfile                  # Build Vite -> Nginx alpine, healthcheck /healthz
 │   └── package.json / yarn.lock
 │
-├── legacy/                         # Artefak self-host VPS lama (PostgreSQL, docker-compose, Caddy) — referensi saja
-├── docs/                           # Catatan operasional
 ├── tests/tests.txt                 # Skenario uji fungsional (bahasa Inggris)
 ├── README-COOLIFY.md               # Langkah deploy di Coolify + variabel lingkungan
-├── README-INSTALL-VPS.md, DEPLOYMENT.md, MIGRATION-CHECKLIST.md, README-DATA-MIGRATION.md  # Dokumen versi VPS lama
+├── AGENTS.md                       # SOP kerja agent AI (Load by token → kerja → Save via PR)
 └── .gitignore
 ```
 
