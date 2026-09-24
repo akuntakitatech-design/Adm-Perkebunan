@@ -1,5 +1,10 @@
 # Administrasi Perkebunan
 
+![frontend Coolify (domain di dashboard)](https://img.shields.io/badge/frontend-Coolify%20%28domain%20di%20dashboard%29-1f6feb?style=flat-square&logo=globe&logoColor=white) ![api /api via Nginx alias](https://img.shields.io/badge/api-%2Fapi%20via%20Nginx%20alias-2ea043?style=flat-square&logo=serverless&logoColor=white) ![media Cloudflare R2](https://img.shields.io/badge/media-Cloudflare%20R2-f38020?style=flat-square&logo=cloudflare&logoColor=white) ![workflow PR only · emergent-agent](https://img.shields.io/badge/workflow-PR%20only%20%C2%B7%20emergent--agent-8957e5?style=flat-square&logo=github&logoColor=white)
+
+![Node.js 22](https://img.shields.io/badge/Node.js-22-339933?style=flat-square&logo=nodedotjs&logoColor=white) ![Express 4](https://img.shields.io/badge/Express-4-000000?style=flat-square&logo=express&logoColor=white) ![TypeScript 5.7](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=flat-square&logo=typescript&logoColor=white) ![MariaDB 11](https://img.shields.io/badge/MariaDB-11-003545?style=flat-square&logo=mariadb&logoColor=white) ![React 19](https://img.shields.io/badge/React-19-20232a?style=flat-square&logo=react&logoColor=61dafb) ![Vite 6](https://img.shields.io/badge/Vite-6-646cff?style=flat-square&logo=vite&logoColor=white) ![Tailwind 3.4](https://img.shields.io/badge/Tailwind-3.4-06b6d4?style=flat-square&logo=tailwindcss&logoColor=white) ![Nginx 1.27](https://img.shields.io/badge/Nginx-1.27-009639?style=flat-square&logo=nginx&logoColor=white) ![Docker Coolify](https://img.shields.io/badge/Docker-Coolify-2496ed?style=flat-square&logo=docker&logoColor=white)
+
+
 Aplikasi web untuk **administrasi kebun kelapa sawit**: pencatatan panen & penjualan TBS ke PKS, pekerjaan kebun dan payroll pekerja, kas & bank, pembelian dan persediaan barang, aset tetap, hingga akuntansi (COA, jurnal, laba rugi, neraca). Mendukung **multi-perusahaan** (workspace) dengan peran pengguna (Owner, Admin Pusat, Finance, Admin Kebun, Viewer).
 
 Panduan deploy di Coolify: lihat [`README-COOLIFY.md`](README-COOLIFY.md).
